@@ -66,12 +66,23 @@ With static IP addresses assigned on the `SOC-LAB` internal network, connectivit
 | Windows | Ethernet 2 | 192.168.100.11 |
 | REMnux | enp0s8 | 192.168.100.12 |
 
-**Troubleshooting note:** Initial ping tests from Kali/REMnux to Windows failed, while Windows could successfully ping the Linux machines. This was caused by the Windows Defender Firewall blocking inbound ICMP Echo Requests by default. The issue was resolved by enabling the *"File and Printer Sharing (Echo Request - ICMPv4-In)"* inbound rule in Windows Firewall with Advanced Security.
+**Troubleshooting note 1 — Windows Firewall:** Initial ping tests from Kali/REMnux to Windows failed, while Windows could successfully ping the Linux machines. This was caused by the Windows Defender Firewall blocking inbound ICMP Echo Requests by default. The issue was resolved by enabling the *"File and Printer Sharing (Echo Request - ICMPv4-In)"* inbound rule in Windows Firewall with Advanced Security.
+
+**Troubleshooting note 2 — Persisting static IPs:** Initial IP configuration was applied temporarily via `ip addr add`, which does not survive a reboot. To make the configuration persistent, each system required a different approach depending on its network management stack:
+
+| VM | Network manager | Method used |
+|---|---|---|
+| Kali Linux | NetworkManager | `nmcli connection modify` |
+| REMnux | Netplan | YAML configuration in `/etc/netplan/` |
+| Windows | Native TCP/IPv4 settings | Static IP set via GUI (persistent by default) |
+
+Even though Kali and REMnux are both Debian-based distributions, they use different network management stacks — a detail confirmed through direct troubleshooting rather than assumption.
 
 **Validation results:**
 - [x] Kali Linux ↔ Windows — successful
 - [x] REMnux ↔ Windows — successful
 - [x] Kali Linux ↔ REMnux — successful
+- [x] Static IP configuration persists after reboot (all VMs)
 
 ![Kali - ip addr](./evidence/kali-ip-addr.png)
 ![REMnux - ip addr](./evidence/remnux-ip-addr.png)
