@@ -90,3 +90,29 @@ Even though Kali and REMnux are both Debian-based distributions, they use differ
 ![Kali to Windows ping](./evidence/kali-ping-windows.png)
 ![Windows to REMnux ping](./evidence/windows-ping-remnux.png)
 ![REMnux to Kali ping](./evidence/remnux-ping-kali.png)
+
+### Phase 4 — Remote Access Configuration (SSH) ✅
+
+To support remote access between VMs (used in later projects, such as network traffic analysis), SSH was configured and validated across all three machines.
+
+**Setup:**
+- [x] OpenSSH Server enabled on Kali Linux (`sudo systemctl enable --now ssh`)
+- [x] OpenSSH Server enabled on REMnux (`sudo systemctl enable --now ssh`)
+- [x] OpenSSH Server installed and enabled on Windows (via Windows Features → "Servidor OpenSSH")
+
+**Troubleshooting note 1 — Network profile blocking inbound connections:** After enabling the OpenSSH Server on Windows, inbound SSH connections were refused. The cause was the `SOC-LAB` network being classified as **Public** by Windows, while the auto-created firewall rule (`OpenSSH-Server-In-TCP`) only applies to the **Private** profile. This was resolved by manually setting the network category:
+```powershell
+Set-NetConnectionProfile -InterfaceAlias 'Ethernet 2' -NetworkCategory Private
+```
+**Note:** Since this internal network has no gateway, Windows cannot always reliably auto-classify it, and the profile may need to be re-checked after a VM reboot.
+
+**Troubleshooting note 2 — Blank password blocking authentication:** Even after the firewall and network profile were correctly configured, SSH connections to Windows still failed silently. The cause was that the local Windows account (`vboxuser`) had no password set — by default, OpenSSH on Windows rejects authentication for accounts with a blank password. This was resolved by setting a password for the account:
+```powershell
+net user vboxuser *
+```
+
+**Note on default credentials:** REMnux ships with a default account (`remnux` / `malware`) for lab convenience. In a production environment, default credentials like this should always be changed immediately.
+
+**Validation results:**
+- [x] SSH — Kali Linux → REMnux — successful
+- [x] SSH — Kali Linux → Windows — successful
