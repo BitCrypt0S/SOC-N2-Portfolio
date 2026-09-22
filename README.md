@@ -8,20 +8,19 @@ This repository contains practical labs and security analyses performed in isola
 
 ## Contents
 
-* Security Event Analysis
-* Log Analysis
-* Incident Investigation
-* Network Traffic Analysis
-* Malware Analysis
-* IOC Analysis
-* Security Tools and Technologies
+1. [Lab Environment](./01-Lab-Environment/) — Setup and configuration of the isolated virtual lab (VirtualBox, network architecture, connectivity, and remote access).
+2. [Network Traffic Analysis](./02-Network-Traffic-Analysis/) — Capture and analysis of ICMP and SSH traffic using Wireshark.
+3. Malware Analysis *(planned)*
+4. IOC Analysis *(planned)*
+5. Log Analysis *(planned)*
+6. Incident Investigation *(planned)*
 
 ## Lab Environment
 
-* REMnux
-* Kali Linux
-* Windows Virtual Machine
-* VirtualBox
+- REMnux
+- Kali Linux
+- Windows Virtual Machine
+- VirtualBox
 
 ## Objective
 
